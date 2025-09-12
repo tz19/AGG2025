@@ -90,7 +90,7 @@ class InitialConditions(UserExpression):
         distance, grain_index = tree.query([x[0]/Lx, x[1]/Lx])
         for i in range(num_phi):
             values[i] = 0.0
-        values[grain_index % num_phi] = 1.0*math.exp(-1.0*(distance/0.1)**2)
+        values[grain_index % num_phi] = 1.0*math.exp(-1.0*(distance/0.1)**2) # Normal distribution for better convergence
     def value_shape(self):
         return (num_phi,)
 
@@ -127,7 +127,7 @@ bc3 = DirichletBC(V.sub(1), 0,    BC_y0)
 bc4 = DirichletBC(V.sub(2), 0,    BC_z0)
 bc5 = DirichletBC(V.sub(1), 0,    BC_origin)
 bc6 = DirichletBC(V.sub(2), 0,    BC_origin)
-# bc = [bc1, bc2, bc3, bc4]
+# bc = [bc1, bc2, bc3, bc4] # much more stable
 bc = [bc1, bc2, bc5, bc6]
 
 # Small Strain tensor
@@ -216,7 +216,7 @@ for inc in range(inc_max):
     if t > 5:
         dLx = 1.0
         bc2 = DirichletBC(V.sub(0), dLx,  BC_x1)
-        # bc = [bc1, bc2, bc3, bc4]
+        # bc = [bc1, bc2, bc3, bc4] # much more stable
         bc = [bc1, bc2, bc5, bc6]
 
     J = derivative(F, u, du)
